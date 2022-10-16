@@ -1,0 +1,35 @@
+1. Crear la carpeta app con el archivo __init__.py
+    En __init__ se inicia la aplicación con "app = Flask(__name__)
+
+2. Creamos routes.py y añadimos una simple ruta.
+    routes.py lo importamos desde el final de __init__ para evitar imoprts circulares
+
+3. Creamos randomThought.py (el archivo principal que importa el paquete (app))
+
+4. Añadimos "pip install python-dotenv" y en .flaskenv añadimos FLASK_APP=randomThought.py para tener que evitar escribirlo cada vez
+
+5. Ya podemos iniciar la pplicación de forma básica con "flask run"
+
+6. Creamos /templates para añadir el html, utilizamos las plantillas de Jinja2.
+
+7. Para devolver el html al usuario, importamos render_template de Flask en routes.py
+    La función acepta pa´rametros para establecer las variales de la plantilla.
+
+8. Con las plantillas de Jinja2 se pueden añadir condicionales, bucles, etc...
+
+9. Las plantillas pueden heredar unas de otras, así se pueden organizar como si fueran componenetes y reutilizarlos.
+
+10. Forms: Para procesar los formualrios enviados por los usuarios usaremos Flask-wtf
+
+11. Para la configuración, podemos simplemente poner las variables en __init__ mediante "app.config['SECRET_KEY'] = 'you-will-never-guess'
+", pero es mejor separarlo en su propia clase donde tenemos centralizadas las variables de configuraición. Creamos pues "config.py". De ahí las obtendremos de la ocnfiguración del entorno
+
+12. Podremos usar la clave de SECRET_KEY por ejemplo para prevenir atauqes de CSRF ("seasurf")
+
+13. Ahora si, indicaremos a Flask en __init__ que use la configuración indicada. "app.config.from_object(Config)"
+
+14. Para guardar los diferentes forms crearemos /forms
+
+15. Creamos la plantilla del login
+
+16. Añadimos las rutas correspondientes
