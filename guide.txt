@@ -33,3 +33,9 @@
 15. Creamos la plantilla del login
 
 16. Añadimos las rutas correspondientes
+
+17. Para recibir la información del form, ampliaremos la ruta de /login
+    Usaremos form.validate_on_submit() para que flask se encargue de la validación del form si se ha llegado a establecer
+    método mediante el form, si no va al render_template directamente
+
+    Cuando se mete al form, le redirige al /index 
