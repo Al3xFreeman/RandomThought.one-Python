@@ -1,3 +1,4 @@
+from email.policy import default
 from typing import overload
 from app import db, login
 from datetime import datetime
@@ -11,6 +12,8 @@ class User(UserMixin, db.Model):
     email = db.Column(db.String(120), index=True, unique=True)
     password_hash = db.Column(db.String(128))
     posts = db.relationship('Post', backref='author', lazy='dynamic')
+    starred = db.relationship('Post', lazy='dynamic')
+    stars = db.Column(db.Integer, default=0)
 
     def __repr__(self):
         return '<User {}>'.format(self.username)
@@ -34,6 +37,7 @@ class Post(db.Model):
     body = db.Column(db.String(140))
     timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    stars = db.Column(db.Integer, default=0)
 
     def __repr__(self):
-        return '<Post {}>'.format(self.body)
+        return '<Post {} by: {}>'.format(self.body, self.author)
