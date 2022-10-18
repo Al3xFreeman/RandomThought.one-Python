@@ -1,9 +1,12 @@
 from flask import render_template, flash, redirect, url_for, request
 from app import app, db
 from app.forms import LoginForm, RegistrationForm
-from flask_login import current_user, login_user, logout_user, login_required
+from flask_login import current_user, login_user, logout_user, login_required, user_unauthorized
 from app.models import User
 from werkzeug.urls import url_parse
+from sqlalchemy.sql.expression import func
+import random
+import datetime
 
 @app.route("/")
 @app.route("/index")
@@ -20,7 +23,30 @@ def index():
         'body': 'The Avengers movie was so cool!'
     }]
 
-    return render_template('index.html', title='Home', posts=posts)
+    rC = User.query.count()
+    #test = User.query.offset(rC*random.random()).first().username #Random each time
+    num = (datetime.datetime.utcnow() - datetime.datetime(1970,1,1)).days
+    num += current_user.id #If it is anon, the id will be a random number
+    print("NUM: {}".format(num))
+    test = User.query.offset(num%rC).first() #Based on an input
+    print("ID to show: {}".format(test.id))
+    return render_template('index.html', title='Home', posts=posts, test=test.username)
+
+@app.route("/test")
+def test2():
+    print(current_user.get_id())
+
+    rC = User.query.count()
+    #test = User.query.offset(rC*random.random()).first().username #Random each time
+    num = (datetime.datetime.utcnow() - datetime.datetime(1970,1,1)).seconds
+    print("NUM: {}".format(num))
+    num += current_user.get_id() #If it is anon, the id will be a random number
+    print("NUM: {}".format(num))
+    test = User.query.offset(num%rC).first() #Based on an input
+    print("ID to show: {}".format(test.id))
+    
+    return str(test.id)
+
 
 @app.route("/login", methods=['GET', 'POST'])
 def login():
@@ -63,7 +89,3 @@ def register():
         flash('Congratulations, you are now a registered user!')
         return redirect(url_for('login'))
     return render_template('register.html', title='Register', form=form)
-
-@app.route("/test.one")
-def test():
-    return "This is a test"
