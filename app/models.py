@@ -18,7 +18,8 @@ class User(UserMixin, db.Model):
     email = db.Column(db.String(120), index=True, unique=True)
     password_hash = db.Column(db.String(128))
     posts = db.relationship('Post', backref='author', lazy='dynamic')
-    starred = db.relationship('Post', secondary=star, lazy='subquery', backref=db.backref('users', lazy=True))
+    #starred = db.relationship('Post', secondary=star, lazy='subquery', backref=db.backref('users_starred', lazy=True))
+    starred = db.relationship('Post', secondary=star, lazy='dynamic')
     stars = db.Column(db.Integer, default=0)
 
     def __repr__(self):
@@ -43,7 +44,8 @@ class Post(db.Model):
     body = db.Column(db.String(140))
     timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
-    stars = db.Column(db.Integer, default=0)
+    #starred = db.relationship(User, secondary=star, lazy='subquery', backref=db.backref('starred_posts', lazy=True))
+    starred = db.relationship(User, secondary=star, lazy='dynamic')
 
     def __repr__(self):
         return '<Post {} by: {}>'.format(self.body, self.author)
