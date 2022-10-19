@@ -6,7 +6,7 @@
     {% endif %}
     <p>{{ post.body }}</p>
     {% if post.author %}
-    <p>~ {{ post.author.username }}</p>
+    <p>Stars: {{ post.stars }} | ~ {{ post.author.username }}</p>
     {% endif %}
 
     {% if not current_user.is_anonymous %}

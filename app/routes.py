@@ -23,13 +23,12 @@ def make_session_permanent():
 def index():
     form = NewPostForm()
     if form.validate_on_submit():
-        post = Post(body=form.body.data)
+        post = Post(body=form.body.data, author=current_user)
         db.session.add(post)
         db.session.commit()
         flash('New Thought sent!')
         return redirect(url_for('index'))
 
-    
     resp = make_response()
     cookie_key = 'RT_rndPost'
     
@@ -53,13 +52,17 @@ def index():
     
     return resp
 
-@app.route("/test")
-def test2():
-    pass
-
 def getRandomRow(table, offset):
     table.query.count()
     return table.query.offset(offset).first_or_404()
+
+
+@app.route("/<username>")
+def profile(username):
+    user = User.query.filter_by(username=username).first_or_404()
+
+    return render_template('profile.html', title="{}'s Profile".format(username), user=user)
+
 
 
 @app.route("/login", methods=['GET', 'POST'])

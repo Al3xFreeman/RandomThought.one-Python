@@ -5,6 +5,12 @@ from datetime import datetime
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import UserMixin, AnonymousUserMixin
 import random
+from sqlalchemy.orm import remote
+
+star = db.Table('starred',
+    db.Column('user_id', db.Integer, db.ForeignKey('user.id'), primary_key=True),
+    db.Column('post_id', db.Integer, db.ForeignKey('post.id'), primary_key=True)
+)
 
 class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -12,7 +18,7 @@ class User(UserMixin, db.Model):
     email = db.Column(db.String(120), index=True, unique=True)
     password_hash = db.Column(db.String(128))
     posts = db.relationship('Post', backref='author', lazy='dynamic')
-    starred = db.relationship('Post', lazy='dynamic')
+    starred = db.relationship('Post', secondary=star, lazy='subquery', backref=db.backref('users', lazy=True))
     stars = db.Column(db.Integer, default=0)
 
     def __repr__(self):
