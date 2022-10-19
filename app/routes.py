@@ -19,7 +19,6 @@ def make_session_permanent():
 
 @app.route("/", methods=['GET', 'POST'])
 @app.route("/index", methods=['GET', 'POST'])
-#@login_required
 def index():
     form = NewPostForm()
     if form.validate_on_submit():
@@ -34,8 +33,8 @@ def index():
     
     if request.cookies.get(key=cookie_key, type=int, default=None) is None:
         rC = Post.query.count()
-        cookie_value = random.randrange(rC) #if it is an anonymous user, the id will be a random value
-        #TODO save that random value so if the user logs in, the post shown is the same
+        cookie_value = random.randrange(rC)
+
         t_now = datetime.datetime.today().utcnow()
         t_cookie_duration = datetime.timedelta(days=1)
         t_end = datetime.datetime(year=t_now.year, month=t_now.month, day=t_now.day) + t_cookie_duration
@@ -47,7 +46,7 @@ def index():
 
     test = getRandomRow(Post, cookie_value)
     print(test.body)
-    #resp.set_data("Result: {}".format(test.username))
+
     resp.set_data(render_template('index.html', title='RandomThought.one', post=test, form=form))
     
     return resp
@@ -67,15 +66,14 @@ def profile(username):
 @login_required
 def star_post(post_id):
     p = Post.query.get_or_404(post_id)
-    current_user.starred.append(p)
-    p.stars += 1
+    current_user.starred_posts.append(p)
     print("POST: {}".format(p))
-    print("POST AUTHOR: {}".format(p.author))
     print("POST AUTHOR STARS: {}".format(p.author.stars))
     if p.author is not None:
         p.author.stars += 1
-
+    print("POST AUTHOR STARS: {}".format(p.author.stars))
     db.session.add(p)
+    db.session.add(current_user)
     db.session.commit()
 
     return redirect(url_for('index'))
@@ -84,16 +82,16 @@ def star_post(post_id):
 @app.route("/<post_id>/unstar")
 @login_required
 def untar_post(post_id):
+
     p = Post.query.get_or_404(post_id)
-    current_user.starred.remove(p)
-    p.stars -= 1
+    current_user.starred_posts.remove(p)
     print("POST: {}".format(p))
-    print("POST AUTHOR: {}".format(p.author))
     print("POST AUTHOR STARS: {}".format(p.author.stars))
     if p.author is not None:
         p.author.stars -= 1
-
+    print("POST AUTHOR STARS: {}".format(p.author.stars))
     db.session.add(p)
+    db.session.add(current_user)
     db.session.commit()
 
     return redirect(url_for('index'))
