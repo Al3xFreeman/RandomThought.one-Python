@@ -63,6 +63,41 @@ def profile(username):
 
     return render_template('profile.html', title="{}'s Profile".format(username), user=user)
 
+@app.route("/<post_id>/star")
+@login_required
+def star_post(post_id):
+    p = Post.query.get_or_404(post_id)
+    current_user.starred.append(p)
+    p.stars += 1
+    print("POST: {}".format(p))
+    print("POST AUTHOR: {}".format(p.author))
+    print("POST AUTHOR STARS: {}".format(p.author.stars))
+    if p.author is not None:
+        p.author.stars += 1
+
+    db.session.add(p)
+    db.session.commit()
+
+    return redirect(url_for('index'))
+
+
+@app.route("/<post_id>/unstar")
+@login_required
+def untar_post(post_id):
+    p = Post.query.get_or_404(post_id)
+    current_user.starred.remove(p)
+    p.stars -= 1
+    print("POST: {}".format(p))
+    print("POST AUTHOR: {}".format(p.author))
+    print("POST AUTHOR STARS: {}".format(p.author.stars))
+    if p.author is not None:
+        p.author.stars -= 1
+
+    db.session.add(p)
+    db.session.commit()
+
+    return redirect(url_for('index'))
+
 
 
 @app.route("/login", methods=['GET', 'POST'])

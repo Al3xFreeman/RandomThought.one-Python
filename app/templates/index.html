@@ -1,12 +1,17 @@
 {% extends "base.html" %}
 
 {% block content %}
+    <h1>ONE RANDOM THOUGHT</h1>
     {% if not current_user.is_anonymous %}
-    <h1>Hi, {{ current_user.username }}!</h1>
+    <!--<h1>Hi, {{ current_user.username }}!</h1>-->
     {% endif %}
     <p>{{ post.body }}</p>
     {% if post.author %}
     <p>Stars: {{ post.stars }} | ~ {{ post.author.username }}</p>
+    <iframe name="dummyframe" id="dummyframe" style="display: none;"></iframe>
+    <form action="/{{post.id}}/star" target="dummyframe">
+        <input type="submit" value="Star!">
+    </form>
     {% endif %}
 
     {% if not current_user.is_anonymous %}

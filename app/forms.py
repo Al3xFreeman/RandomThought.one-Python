@@ -28,5 +28,5 @@ class RegistrationForm(FlaskForm):
 
 
 class NewPostForm(FlaskForm):
-    body = TextAreaField('Body', validators=[DataRequired(), Length(3, 1024)])
-    submit = SubmitField('New Random Thought')
+    body = TextAreaField('New Random Thought', validators=[DataRequired(), Length(3, 1024)])
+    submit = SubmitField('Send')
