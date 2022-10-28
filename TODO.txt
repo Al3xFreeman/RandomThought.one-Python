@@ -8,7 +8,7 @@
 
 - Better app structure (blueprints y demás) -https://blog.miguelgrinberg.com/post/the-flask-mega-tutorial-part-xv-a-better-application-structure
 
-- Error handling - https://blog.miguelgrinberg.com/post/the-flask-mega-tutorial-part-vii-error-handling
+- ✔️ Error handling - https://blog.miguelgrinberg.com/post/the-flask-mega-tutorial-part-vii-error-handling
 
 - Paginación - https://blog.miguelgrinberg.com/post/the-flask-mega-tutorial-part-ix-pagination
 
@@ -20,3 +20,6 @@
 
 - Email
 
+- Dejarlo bonito
+
+- Logging - https://blog.miguelgrinberg.com/post/the-flask-mega-tutorial-part-vii-error-handling
