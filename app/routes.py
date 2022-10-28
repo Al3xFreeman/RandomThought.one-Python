@@ -70,9 +70,30 @@ def getRandomRow(table, offset):
 
 @app.route("/<username>")
 def profile(username):
+
+    posts_page = request.args.get('posts_page', 1, type=int)
+    starred_page = request.args.get('starred_page', 1, type=int)
+
     user = User.query.filter_by(username=username).first_or_404()
 
-    return render_template('profile.html', title="{}'s Profile".format(username), user=user)
+    user_posts = user.posts.paginate(page=posts_page, per_page=app.config['POSTS_PER_PAGE'], error_out=False)
+    starred_posts = user.starred_posts.paginate(page=starred_page, per_page=app.config['POSTS_PER_PAGE'], error_out=False)
+
+    user_posts_next_url = url_for('profile', username=username, posts_page=user_posts.next_num, starred_page=starred_page) if user_posts.has_next else None
+    user_posts_prev_url = url_for('profile', username=username, posts_page=user_posts.prev_num, starred_page=starred_page) if user_posts.has_prev else None
+
+    starred_posts_next_url = url_for('profile', username=username, posts_page=posts_page, starred_page=starred_posts.next_num) if starred_posts.has_next else None
+    starred_posts_prev_url = url_for('profile', username=username, posts_page=posts_page, starred_page=starred_posts.prev_num) if starred_posts.has_prev else None
+
+    return render_template('profile.html', title="{}'s Profile".format(username),\
+                                                                    user=user, \
+                                                                    user_posts=user_posts.items, \
+                                                                    starred_posts=starred_posts.items, \
+                                                                    user_posts_next_url = user_posts_next_url, \
+                                                                    user_posts_prev_url = user_posts_prev_url, \
+                                                                    starred_posts_next_url = starred_posts_next_url, \
+                                                                    starred_posts_prev_url = starred_posts_prev_url, \
+                                                                    )
 
 @app.route("/<post_id>/star")
 @login_required

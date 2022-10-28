@@ -10,7 +10,7 @@
 
 - ✔️ Error handling - https://blog.miguelgrinberg.com/post/the-flask-mega-tutorial-part-vii-error-handling
 
-- Paginación - https://blog.miguelgrinberg.com/post/the-flask-mega-tutorial-part-ix-pagination
+- ✔️ Paginación - https://blog.miguelgrinberg.com/post/the-flask-mega-tutorial-part-ix-pagination
 
 - API - https://blog.miguelgrinberg.com/post/the-flask-mega-tutorial-part-xxiii-application-programming-interfaces-apis
 - JWT

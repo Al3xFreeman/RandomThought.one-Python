@@ -5,19 +5,30 @@
     <h1>ONE RANDOM</h1>
     <h1>{{ user.username }}</h1>
     <h3>Posts:</h3>
-    {% for post in user.posts.all() %}
+    {% for post in user_posts %}
     <li>
         {{ post.body }} | ~{{ post.author.username }} | Stars: {{ post.stars() }}
     </li>
     {% endfor %}
+    {% if user_posts_prev_url %}
+        <a href="{{ user_posts_prev_url }}">Newer Thoughts</a>
+    {% endif %}
+    {% if user_posts_next_url %}
+        <a href="{{ user_posts_next_url }}">Older Thoughts</a>
+    {% endif %}
 
     <h3>Starred:</h3>
-    {% for post in user.starred_posts.all() %}
+    {% for post in starred_posts %}
     <li>
         {{ post.body }} | ~{{ post.author.username }} | Stars: {{ post.stars() }}
     </li>
     {% endfor %}
-
+    {% if starred_posts_prev_url %}
+        <a href="{{ starred_posts_prev_url }}">Newer Starred Thoughts</a>
+    {% endif %}
+    {% if starred_posts_next_url %}
+        <a href="{{ starred_posts_next_url }}">Older Starred Thoughts</a>
+    {% endif %}
     
 
 {% endblock %}
