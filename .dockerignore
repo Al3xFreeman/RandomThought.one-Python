@@ -1,0 +1,8 @@
+.env
+.flaskenv
+.gitignore
+
+deploy.txt
+guide.txt
+TODO.txt
+app.db

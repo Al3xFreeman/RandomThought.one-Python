@@ -4,10 +4,20 @@
 
     <h1>ONE RANDOM</h1>
     <h1>{{ user.username }}</h1>
+    <h3>Posts:</h3>
     {% for post in user.posts.all() %}
     <li>
         {{ post.body }} | ~{{ post.author.username }} | Stars: {{ post.stars() }}
     </li>
     {% endfor %}
+
+    <h3>Starred:</h3>
+    {% for post in user.starred_posts.all() %}
+    <li>
+        {{ post.body }} | ~{{ post.author.username }} | Stars: {{ post.stars() }}
+    </li>
+    {% endfor %}
+
+    
 
 {% endblock %}

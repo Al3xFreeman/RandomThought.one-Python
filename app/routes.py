@@ -17,6 +17,15 @@ def make_session_permanent():
     print("COOKIE: {}".format(app.session_cookie_name))
 """
 
+@app.route("/testPost")
+def testPost():
+    print("Number of posts: ", Post.query.count())
+    p = Post(body="Test Post")
+    db.session.add(p)
+    db.session.commit()
+    print("Number of posts: ", Post.query.count())
+    return {'numPosts': Post.query.count()}
+
 @app.route("/", methods=['GET', 'POST'])
 @app.route("/index", methods=['GET', 'POST'])
 def index():
@@ -44,10 +53,13 @@ def index():
     else:
         cookie_value = request.cookies.get(key=cookie_key, type=int, default=None)
 
+    rC = Post.query.count()
+    val = random.randrange(rC)
+    randomPost = getRandomRow(Post, val)
     test = getRandomRow(Post, cookie_value)
     print(test.body)
 
-    resp.set_data(render_template('index.html', title='RandomThought.one', post=test, form=form))
+    resp.set_data(render_template('index.html', title='RandomThought.one', post=randomPost, form=form))
     
     return resp
 
@@ -66,15 +78,18 @@ def profile(username):
 @login_required
 def star_post(post_id):
     p = Post.query.get_or_404(post_id)
-    current_user.starred_posts.append(p)
-    print("POST: {}".format(p))
-    print("POST AUTHOR STARS: {}".format(p.author.stars))
-    if p.author is not None:
-        p.author.stars += 1
-    print("POST AUTHOR STARS: {}".format(p.author.stars))
-    db.session.add(p)
-    db.session.add(current_user)
-    db.session.commit()
+    if p not in current_user.starred_posts:
+        current_user.starred_posts.append(p)
+        print("POST: {}".format(p))
+        if p.author:
+            print("POST AUTHOR STARS: {}".format(p.author.stars))
+        if p.author is not None:
+            p.author.stars += 1
+        if p.author:        
+            print("POST AUTHOR STARS: {}".format(p.author.stars))
+        db.session.add(p)
+        db.session.add(current_user)
+        db.session.commit()
 
     return redirect(url_for('index'))
 
@@ -84,15 +99,18 @@ def star_post(post_id):
 def untar_post(post_id):
 
     p = Post.query.get_or_404(post_id)
-    current_user.starred_posts.remove(p)
-    print("POST: {}".format(p))
-    print("POST AUTHOR STARS: {}".format(p.author.stars))
-    if p.author is not None:
-        p.author.stars -= 1
-    print("POST AUTHOR STARS: {}".format(p.author.stars))
-    db.session.add(p)
-    db.session.add(current_user)
-    db.session.commit()
+    if p in current_user.starred_posts:
+        current_user.starred_posts.remove(p)
+        print("POST: {}".format(p))
+        if p.author:
+            print("POST AUTHOR STARS: {}".format(p.author.stars))
+        if p.author is not None:
+            p.author.stars -= 1
+        if p.author:
+            print("POST AUTHOR STARS: {}".format(p.author.stars))
+        db.session.add(p)
+        db.session.add(current_user)
+        db.session.commit()
 
     return redirect(url_for('index'))
 
