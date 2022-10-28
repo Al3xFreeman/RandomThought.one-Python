@@ -30,8 +30,7 @@ class User(UserMixin, db.Model):
     def check_password(self, password):
         return check_password_hash(self.password_hash, password)
 
-    def star_post(self, post_id):
-        p = Post.query.get_or_404(post_id)
+    def star_post(self, p):
         if p not in self.starred_posts:
             self.starred_posts.append(p)
             if p.author:
@@ -42,8 +41,7 @@ class User(UserMixin, db.Model):
         
         return p
         
-    def unstar_post(self, post_id):
-        p = Post.query.get_or_404(post_id)
+    def unstar_post(self, p):
         if p in self.starred_posts:
             self.starred_posts.remove(p)
             if p.author:

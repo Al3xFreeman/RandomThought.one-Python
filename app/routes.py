@@ -113,7 +113,8 @@ def star_post(post_id):
         db.session.add(current_user)
         db.session.commit()
     """
-    p = current_user.star_post(post_id)
+    p = Post.query.get_or_404(post_id)
+    _ = current_user.star_post(p)
 
     return redirect(url_for('index'))
 
@@ -136,8 +137,9 @@ def unstar_post(post_id):
         db.session.add(current_user)
         db.session.commit()
     """
-    p = current_user.unstar_post(post_id)
-    
+    p = Post.query.get_or_404(post_id)
+    _ = current_user.unstar_post(p)
+
     return redirect(url_for('index'))
 
 
