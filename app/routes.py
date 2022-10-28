@@ -98,6 +98,7 @@ def profile(username):
 @app.route("/<post_id>/star")
 @login_required
 def star_post(post_id):
+    """
     p = Post.query.get_or_404(post_id)
     if p not in current_user.starred_posts:
         current_user.starred_posts.append(p)
@@ -111,14 +112,16 @@ def star_post(post_id):
         db.session.add(p)
         db.session.add(current_user)
         db.session.commit()
+    """
+    p = current_user.star_post(post_id)
 
     return redirect(url_for('index'))
 
 
 @app.route("/<post_id>/unstar")
 @login_required
-def untar_post(post_id):
-
+def unstar_post(post_id):
+    """
     p = Post.query.get_or_404(post_id)
     if p in current_user.starred_posts:
         current_user.starred_posts.remove(p)
@@ -132,7 +135,9 @@ def untar_post(post_id):
         db.session.add(p)
         db.session.add(current_user)
         db.session.commit()
-
+    """
+    p = current_user.unstar_post(post_id)
+    
     return redirect(url_for('index'))
 
 
