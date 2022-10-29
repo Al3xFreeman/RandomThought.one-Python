@@ -23,3 +23,5 @@
 - Dejarlo bonito
 
 - Logging - https://blog.miguelgrinberg.com/post/the-flask-mega-tutorial-part-vii-error-handling
+
+- Poetry/Package manager
