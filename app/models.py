@@ -68,7 +68,7 @@ class Post(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
 
     def __repr__(self):
-        return '<Post {} by: {} | Stars: {}>'.format(self.body, self.author, len(self.users_starred))
+        return '<ID: {} | Post {} by: {} | Stars: {}>'.format(self.id, self.body, self.author, len(self.users_starred))
 
     def stars(self):
         return len(self.users_starred)

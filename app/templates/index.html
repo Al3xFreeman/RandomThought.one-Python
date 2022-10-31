@@ -13,8 +13,8 @@
     {% endif %}
 
     <p>{{ post.body }}</p>
-
-    <p>Stars: {{ post.stars() }}
+    <p>Post ID: {{ post.id }}</p>
+    <p>Stars: <span id="starsCounter"> {{ post.stars() }}</span></p>
     <!--
     {% if post.author %}
         ~ <a href="{{ url_for('profile', username=post.author.username) }}">{{ post.author.username }}</a>
@@ -23,21 +23,22 @@
         ~ Anonymous
     {% endif %}
     -->
-    </p>
+
     {% if current_user.is_authenticated %}
         {% if post in current_user.starred_posts %}
-            <iframe name="dummyframe" id="dummyframe" style="display: none;"></iframe>
-            <form action="/{{post.id}}/unstar" target="dummyframe">
-                <input type="submit" value="Remove Star!">
-            </form>
+            {% set starred = true %}
+            {% set formText = 'Remove Star!' %}
         {% else %}
-        <iframe name="dummyframe" id="dummyframe" style="display: none;"></iframe>
-        <form action="/{{post.id}}/star" target="dummyframe">
-            <input type="submit" value="Star!">
-        </form>
+            {% set starred = true %}
+            {% set formText = 'Add Star!' %}
         {% endif %}
+        
+        <iframe name="dummyframe"  id="dummyframe" style="display: none;"></iframe>
+        <form id="formStar" action="javascript:void(0);" target="dummyframe">
+            <input id="formStarInput"  type="submit" value="{{ formText }}">
+        </form>
     {% endif %}
-
+    
     {% if not current_user.is_anonymous %}
     <form action="" method="post">
         {{ form.hidden_tag() }}
@@ -52,4 +53,54 @@
 
     </form>
     {% endif %}
+{% endblock %}
+
+
+
+{% block scripts %}
+{{ super() }}
+<script>
+
+    {% if post in current_user.starred_posts %}
+    let starred = true;
+    {% else %}
+    let starred = false;
+    {% endif %}
+    console.log("EH TU" + starred);
+
+    const JSformStar = document.getElementById('formStar');
+    JSformStar.addEventListener('submit', function() {
+        if (!starred) {
+            starPost({{post.id}});
+            starred = true;
+            console.log("Starred: " + starred)
+        } else {
+            unstarPost({{post.id}});
+            starred = false;
+            console.log("Starred: " + starred)
+        }
+    });
+
+    function starPost(postId) {
+        $.get('/post/'+postId+'/star')
+        .done(function(response) {
+            $('#starsCounter').text(response['stars']);
+            $('#formStarInput').val("Remove Star!");
+        })
+        .fail(function() {
+            $('#starsCounter').text("An error happened LOL");
+        })
+    }
+    function unstarPost(postId) {
+        $.get('/post/'+postId+'/unstar')
+        .done(function(response) {
+            $('#starsCounter').text(response['stars']);
+            $('#formStarInput').val("Add Star!");
+        })
+        .fail(function() {
+            $('#starsCounter').text("An error happened LOL");
+        })
+    }
+</script>
+
 {% endblock %}

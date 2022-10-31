@@ -1,4 +1,5 @@
-from flask import render_template, flash, redirect, url_for, request, session, make_response
+import json
+from flask import render_template, flash, redirect, url_for, request, session, make_response, jsonify
 from app import app, db
 from app.forms import LoginForm, NewPostForm, RegistrationForm
 from flask_login import current_user, login_user, logout_user, login_required, user_unauthorized
@@ -56,8 +57,8 @@ def index():
     rC = Post.query.count()
     val = random.randrange(rC)
     randomPost = getRandomRow(Post, val)
-    test = getRandomRow(Post, cookie_value)
-    print(test.body)
+    #test = getRandomRow(Post, cookie_value)
+    print(randomPost)
 
     resp.set_data(render_template('index.html', title='RandomThought.one', post=randomPost, form=form))
     
@@ -68,7 +69,7 @@ def getRandomRow(table, offset):
     return table.query.offset(offset).first_or_404()
 
 
-@app.route("/<username>")
+@app.route("/user/<username>")
 def profile(username):
 
     posts_page = request.args.get('posts_page', 1, type=int)
@@ -95,7 +96,7 @@ def profile(username):
                                                                     starred_posts_prev_url = starred_posts_prev_url, \
                                                                     )
 
-@app.route("/<post_id>/star")
+@app.route("/post/<post_id>/star")
 @login_required
 def star_post(post_id):
     """
@@ -114,12 +115,13 @@ def star_post(post_id):
         db.session.commit()
     """
     p = Post.query.get_or_404(post_id)
-    _ = current_user.star_post(p)
+    p = current_user.star_post(p)
 
-    return redirect(url_for('index'))
+    return jsonify({'stars': p.stars()})
+    #return redirect(url_for('index'))
 
 
-@app.route("/<post_id>/unstar")
+@app.route("/post/<post_id>/unstar")
 @login_required
 def unstar_post(post_id):
     """
@@ -138,9 +140,10 @@ def unstar_post(post_id):
         db.session.commit()
     """
     p = Post.query.get_or_404(post_id)
-    _ = current_user.unstar_post(p)
+    p = current_user.unstar_post(p)
 
-    return redirect(url_for('index'))
+    return jsonify({'stars': p.stars()})
+    #return redirect(url_for('index'))
 
 
 
