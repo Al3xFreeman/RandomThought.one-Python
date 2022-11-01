@@ -8,7 +8,7 @@
     {% if not post.author %}
     <h2>Anonymous said:</h2>
     {% else %}
-    <h2><a href="{{ url_for('profile', username=post.author.username) }}"> {{ post.author.username }}</a> said:
+    <h2><a href="{{ url_for('main.profile', username=post.author.username) }}"> {{ post.author.username }}</a> said:
     </h2>
     {% endif %}
 
@@ -17,7 +17,7 @@
     <p>Stars: <span id="starsCounter"> {{ post.stars() }}</span></p>
     <!--
     {% if post.author %}
-        ~ <a href="{{ url_for('profile', username=post.author.username) }}">{{ post.author.username }}</a>
+        ~ <a href="{{ url_for('main.profile', username=post.author.username) }}">{{ post.author.username }}</a>
     
     {% else %}
         ~ Anonymous

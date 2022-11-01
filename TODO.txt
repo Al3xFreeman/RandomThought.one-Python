@@ -6,7 +6,7 @@
 	       - https://blog.miguelgrinberg.com/post/the-flask-mega-tutorial-part-xv-a-better-application-structure
 	       - https://blog.miguelgrinberg.com/post/the-flask-mega-tutorial-part-viii-followers
 
-- Better app structure (blueprints y demás) -https://blog.miguelgrinberg.com/post/the-flask-mega-tutorial-part-xv-a-better-application-structure
+- ✔️ Better app structure (blueprints y demás) -https://blog.miguelgrinberg.com/post/the-flask-mega-tutorial-part-xv-a-better-application-structure
 
 - ✔️ Error handling - https://blog.miguelgrinberg.com/post/the-flask-mega-tutorial-part-vii-error-handling
 

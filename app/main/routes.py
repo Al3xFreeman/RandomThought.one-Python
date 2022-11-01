@@ -25,7 +25,7 @@ def index():
         db.session.add(post)
         db.session.commit()
         flash('New Thought sent!')
-        return redirect(url_for('index'))
+        return redirect(url_for('main.index'))
 
     resp = make_response()
     cookie_key = 'RT_rndPost'
@@ -69,11 +69,11 @@ def profile(username):
     user_posts = user.posts.paginate(page=posts_page, per_page=current_app.config['POSTS_PER_PAGE'], error_out=False)
     starred_posts = user.starred_posts.paginate(page=starred_page, per_page=current_app.config['POSTS_PER_PAGE'], error_out=False)
 
-    user_posts_next_url = url_for('profile', username=username, posts_page=user_posts.next_num, starred_page=starred_page) if user_posts.has_next else None
-    user_posts_prev_url = url_for('profile', username=username, posts_page=user_posts.prev_num, starred_page=starred_page) if user_posts.has_prev else None
+    user_posts_next_url = url_for('main.profile', username=username, posts_page=user_posts.next_num, starred_page=starred_page) if user_posts.has_next else None
+    user_posts_prev_url = url_for('main.profile', username=username, posts_page=user_posts.prev_num, starred_page=starred_page) if user_posts.has_prev else None
 
-    starred_posts_next_url = url_for('profile', username=username, posts_page=posts_page, starred_page=starred_posts.next_num) if starred_posts.has_next else None
-    starred_posts_prev_url = url_for('profile', username=username, posts_page=posts_page, starred_page=starred_posts.prev_num) if starred_posts.has_prev else None
+    starred_posts_next_url = url_for('main.profile', username=username, posts_page=posts_page, starred_page=starred_posts.next_num) if starred_posts.has_next else None
+    starred_posts_prev_url = url_for('main.profile', username=username, posts_page=posts_page, starred_page=starred_posts.prev_num) if starred_posts.has_prev else None
 
     return render_template('profile.html', title="{}'s Profile".format(username),\
                                                                     user=user, \

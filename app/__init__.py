@@ -4,6 +4,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_login import LoginManager
 from flask_bootstrap import Bootstrap
+import flask_monitoringdashboard as dashboard
 
 app = Flask(__name__)
 app.config.from_object(Config)
@@ -24,6 +25,10 @@ def create_app(config_class = Config):
     migrate.init_app(app, db)
     login.init_app(app)
     bootstrap.init_app(app)
+    
+    dashboard.config.init_from(file='config.cfg')
+    dashboard.bind(app)
+    
 
     from app.errors import bp as errors_bp
     app.register_blueprint(errors_bp)
