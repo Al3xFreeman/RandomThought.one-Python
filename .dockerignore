@@ -1,6 +1,6 @@
 .env
-.flaskenv
 .gitignore
+.vscode
 
 deploy.txt
 guide.txt

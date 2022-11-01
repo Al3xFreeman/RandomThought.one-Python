@@ -1,24 +1,13 @@
-import json
-from flask import render_template, flash, redirect, url_for, request, session, make_response, jsonify
-from app import app, db
-from app.forms import LoginForm, NewPostForm, RegistrationForm
-from flask_login import current_user, login_user, logout_user, login_required, user_unauthorized
+from flask import render_template, flash, redirect, url_for, request, make_response, jsonify, current_app
+from app import db
+from app.main import bp
+from app.main.forms import NewPostForm
+from flask_login import current_user, login_required
 from app.models import User, Post
-from werkzeug.urls import url_parse
-from sqlalchemy.sql.expression import func
 import random
 import datetime
 
-"""
-@app.before_request
-def make_session_permanent():
-    print("Session Permanent")
-    session.permanent = True
-    app.permanent_session_lifetime = datetime.timedelta(seconds=30)
-    print("COOKIE: {}".format(app.session_cookie_name))
-"""
-
-@app.route("/testPost")
+@bp.route("/testPost")
 def testPost():
     print("Number of posts: ", Post.query.count())
     p = Post(body="Test Post")
@@ -27,8 +16,8 @@ def testPost():
     print("Number of posts: ", Post.query.count())
     return {'numPosts': Post.query.count()}
 
-@app.route("/", methods=['GET', 'POST'])
-@app.route("/index", methods=['GET', 'POST'])
+@bp.route("/", methods=['GET', 'POST'])
+@bp.route("/index", methods=['GET', 'POST'])
 def index():
     form = NewPostForm()
     if form.validate_on_submit():
@@ -69,7 +58,7 @@ def getRandomRow(table, offset):
     return table.query.offset(offset).first_or_404()
 
 
-@app.route("/user/<username>")
+@bp.route("/user/<username>")
 def profile(username):
 
     posts_page = request.args.get('posts_page', 1, type=int)
@@ -77,8 +66,8 @@ def profile(username):
 
     user = User.query.filter_by(username=username).first_or_404()
 
-    user_posts = user.posts.paginate(page=posts_page, per_page=app.config['POSTS_PER_PAGE'], error_out=False)
-    starred_posts = user.starred_posts.paginate(page=starred_page, per_page=app.config['POSTS_PER_PAGE'], error_out=False)
+    user_posts = user.posts.paginate(page=posts_page, per_page=current_app.config['POSTS_PER_PAGE'], error_out=False)
+    starred_posts = user.starred_posts.paginate(page=starred_page, per_page=current_app.config['POSTS_PER_PAGE'], error_out=False)
 
     user_posts_next_url = url_for('profile', username=username, posts_page=user_posts.next_num, starred_page=starred_page) if user_posts.has_next else None
     user_posts_prev_url = url_for('profile', username=username, posts_page=user_posts.prev_num, starred_page=starred_page) if user_posts.has_prev else None
@@ -96,7 +85,7 @@ def profile(username):
                                                                     starred_posts_prev_url = starred_posts_prev_url, \
                                                                     )
 
-@app.route("/post/<post_id>/star")
+@bp.route("/post/<post_id>/star")
 @login_required
 def star_post(post_id):
     """
@@ -121,7 +110,7 @@ def star_post(post_id):
     #return redirect(url_for('index'))
 
 
-@app.route("/post/<post_id>/unstar")
+@bp.route("/post/<post_id>/unstar")
 @login_required
 def unstar_post(post_id):
     """
@@ -144,47 +133,3 @@ def unstar_post(post_id):
 
     return jsonify({'stars': p.stars()})
     #return redirect(url_for('index'))
-
-
-
-@app.route("/login", methods=['GET', 'POST'])
-def login():
-    if current_user.is_authenticated:
-        return redirect(url_for('index'))
-
-    form = LoginForm()
-    if form.validate_on_submit():
-        user = User.query.filter_by(username=form.username.data).first()
-        print(user)
-        if user is None or not user.check_password(form.password.data):
-            flash('Invalid username or password')
-            return redirect(url_for('login'))
-
-        login_user(user, remember=form.remember_me.data)
-
-        next_page = request.args.get('next')
-        if not next_page or url_parse(next_page).netloc != '':
-            next_page = url_for('index')
-
-        return redirect(next_page)
-
-    return render_template('login.html', title="Sign In", form=form)
-
-@app.route('/logout')
-def logout():
-    logout_user()
-    return redirect(url_for('index'))
-
-@app.route('/register', methods=['GET', 'POST'])
-def register():
-    if current_user.is_authenticated:
-        return redirect(url_for('index'))
-    form = RegistrationForm()
-    if form.validate_on_submit():
-        user = User(username=form.username.data, email=form.email.data)
-        user.set_password(form.password.data)
-        db.session.add(user)
-        db.session.commit()
-        flash('Congratulations, you are now a registered user!')
-        return redirect(url_for('login'))
-    return render_template('register.html', title='Register', form=form)

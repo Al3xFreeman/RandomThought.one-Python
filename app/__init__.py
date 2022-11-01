@@ -1,5 +1,4 @@
-from ensurepip import bootstrap
-from flask import Flask
+from flask import Flask, request, current_app
 from config import Config
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
@@ -12,9 +11,34 @@ db = SQLAlchemy(app)
 migrate = Migrate(app, db)
 login = LoginManager(app)
 login.login_view = 'login'
+login.login_message = 'Please login to access this page'
 bootstrap = Bootstrap(app)
 
 
-from app import routes, models, errors
+def create_app(config_class = Config):
+
+    app = Flask(__name__)
+    app.config.from_object(config_class)
+
+    db.init_app(app)
+    migrate.init_app(app, db)
+    login.init_app(app)
+    bootstrap.init_app(app)
+
+    from app.errors import bp as errors_bp
+    app.register_blueprint(errors_bp)
+
+    from app.auth import bp as auth_bp
+    app.register_blueprint(auth_bp, url_prefix='/auth')
+
+    from app.main import bp as main_bp
+    app.register_blueprint(main_bp)
+
+    if not app.debug and not app.testing:
+        #Logging
+        pass
+
+    return app
+from app import models
 
 login.anonymous_user = models.AnonUser

@@ -15,12 +15,13 @@
 - API - https://blog.miguelgrinberg.com/post/the-flask-mega-tutorial-part-xxiii-application-programming-interfaces-apis
 - JWT
 
-- AJAX - https://blog.miguelgrinberg.com/post/the-flask-mega-tutorial-part-xiv-ajax
+- ✔️ AJAX - https://blog.miguelgrinberg.com/post/the-flask-mega-tutorial-part-xiv-ajax
        - https://blog.miguelgrinberg.com/post/the-flask-mega-tutorial-part-xx-some-javascript-magic
 
 - Email
 
-- Dejarlo bonito
+- ✔️ Dejarlo bonito
+- Vista final
 
 - Logging - https://blog.miguelgrinberg.com/post/the-flask-mega-tutorial-part-vii-error-handling
 
