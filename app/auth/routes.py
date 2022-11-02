@@ -15,13 +15,32 @@ def login():
     form = LoginForm()
     if form.validate_on_submit():
         user = User.query.filter_by(username=form.username.data).first()
-        print(user)
+        #print(user)
         if user is None or not user.check_password(form.password.data):
             flash('Invalid username or password')
             return redirect(url_for('auth.login'))
 
         login_user(user, remember=form.remember_me.data)
+        #print("User logged in: {}".format(form.username.data))
+        next_page = request.args.get('next')
+        if not next_page or url_parse(next_page).netloc != '':
+            next_page = url_for('main.index')
 
+        return redirect(next_page)
+
+    if request.method == 'POST':
+        u = request.form['username']
+        p = request.form['password']
+
+        user = User.query.filter_by(username=u).first()
+        #print(user)
+
+        if user is None or not user.check_password(p):
+            flash('Invalid username or password')
+            return redirect(url_for('auth.login'))
+
+        login_user(user, remember=False)
+        #print("User logged in: {}".format(u))
         next_page = request.args.get('next')
         if not next_page or url_parse(next_page).netloc != '':
             next_page = url_for('main.index')
@@ -47,4 +66,16 @@ def register():
         db.session.commit()
         flash('Congratulations, you are now a registered user!')
         return redirect(url_for('auth.login'))
+
+    if request.method == 'POST':
+        u = request.form['username']
+        p = request.form['password']
+        user = User(username=u)
+        user.set_password(p)
+        db.session.add(user)
+        db.session.commit()
+        #print("New user: ", u)
+        flash('Congratulations, you are now a registered user!')
+        return redirect(url_for('auth.login'))
+
     return render_template('auth/register.html', title='Register', form=form)

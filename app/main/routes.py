@@ -1,3 +1,4 @@
+from xmlrpc.client import Boolean
 from flask import render_template, flash, redirect, url_for, request, make_response, jsonify, current_app
 from app import db
 from app.main import bp
@@ -9,23 +10,47 @@ import datetime
 
 @bp.route("/testPost")
 def testPost():
-    print("Number of posts: ", Post.query.count())
+    #print("Number of posts: ", Post.query.count())
     p = Post(body="Test Post")
     db.session.add(p)
     db.session.commit()
-    print("Number of posts: ", Post.query.count())
+    #print("Number of posts: ", Post.query.count())
     return {'numPosts': Post.query.count()}
 
 @bp.route("/", methods=['GET', 'POST'])
 @bp.route("/index", methods=['GET', 'POST'])
 def index():
+
+    
+
     form = NewPostForm()
     if form.validate_on_submit():
+        #print("ILLO SA METIO A PONER UN NUEVOPOST")
         post = Post(body=form.body.data, author=current_user)
         db.session.add(post)
         db.session.commit()
         flash('New Thought sent!')
-        return redirect(url_for('main.index'))
+
+        resp = make_response(redirect(url_for('main.index')))
+        resp.set_cookie(key='form_red', value=str(True))
+
+        return resp
+
+    
+    if request.method == 'POST':
+        b = request.form['body']
+        #print(current_user.username + " --> ILLO SA METIO A PONER UN NUEVOPOST")
+        post = Post(body=b, author=current_user)
+        
+        db.session.add(post)
+        db.session.commit()
+        flash('New Thought sent!')
+
+        resp = make_response(redirect(url_for('main.index')))
+        resp.set_cookie(key='form_red', value=str(True))
+
+        return resp
+
 
     resp = make_response()
     cookie_key = 'RT_rndPost'
@@ -43,13 +68,36 @@ def index():
     else:
         cookie_value = request.cookies.get(key=cookie_key, type=int, default=None)
 
-    rC = Post.query.count()
-    val = random.randrange(rC)
-    randomPost = getRandomRow(Post, val)
-    #test = getRandomRow(Post, cookie_value)
-    print(randomPost)
+    form_red = request.cookies.get('form_red')
+    print(form_red.lower() in ['true', '1', 't', 'y', 'yes', 'yeah', 'yup', 'certainly', 'uh-huh'])
+    form_red = form_red.lower() in ['true', '1', 't', 'y', 'yes', 'yeah', 'yup', 'certainly', 'uh-huh']
+    print(type(form_red))
 
-    resp.set_data(render_template('index.html', title='RandomThought.one', post=randomPost, form=form))
+    if not form_red:
+        print("HEY")
+        rC = Post.query.count()
+        val = random.randrange(rC)
+        post = getRandomRow(Post, val)
+        if post is None:
+            post = Post(body = "")
+        #test = getRandomRow(Post, cookie_value)
+        #print(randomPost)
+    else:
+        postId = request.cookies.get('lastPost', type=int)
+        post = Post.query.get(postId)
+        if not post:
+            rC = Post.query.count()
+            val = random.randrange(rC)
+            post = getRandomRow(Post, val)
+            if post is None:
+                post = Post(body = "")
+            #test = getRandomRow(Post, cookie_value)
+            #print(randomPost)
+
+
+    resp.set_cookie(key='lastPost', value=str(post.id))
+    resp.set_cookie(key='form_red', value=str(False))
+    resp.set_data(render_template('index.html', title='RandomThought.one', post=post, form=form))
     
     return resp
 
