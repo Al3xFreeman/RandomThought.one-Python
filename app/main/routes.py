@@ -21,8 +21,6 @@ def testPost():
 @bp.route("/index", methods=['GET', 'POST'])
 def index():
 
-    
-
     form = NewPostForm()
     if form.validate_on_submit():
         #print("ILLO SA METIO A PONER UN NUEVOPOST")
@@ -33,6 +31,10 @@ def index():
 
         resp = make_response(redirect(url_for('main.index')))
         resp.set_cookie(key='form_red', value=str(True))
+
+        current_user.last_post = datetime.datetime.now()
+        db.session.add(current_user)
+        db.session.commit()
 
         return resp
 
@@ -53,35 +55,18 @@ def index():
 
 
     resp = make_response()
-    cookie_key = 'RT_rndPost'
-    
-    if request.cookies.get(key=cookie_key, type=int, default=None) is None:
-        rC = Post.query.count()
-        cookie_value = random.randrange(rC)
 
-        t_now = datetime.datetime.today().utcnow()
-        t_cookie_duration = datetime.timedelta(days=1)
-        t_end = datetime.datetime(year=t_now.year, month=t_now.month, day=t_now.day) + t_cookie_duration
-        cookie_max_age = (t_end - t_now).seconds
-
-        resp.set_cookie(key = cookie_key, value = str(cookie_value), max_age=cookie_max_age, expires=cookie_max_age)
-    else:
-        cookie_value = request.cookies.get(key=cookie_key, type=int, default=None)
-
+    # If page load came from redirect, will keep the last seen post, else, a new one is fetched
     form_red = request.cookies.get('form_red')
-    print(form_red.lower() in ['true', '1', 't', 'y', 'yes', 'yeah', 'yup', 'certainly', 'uh-huh'])
     form_red = form_red.lower() in ['true', '1', 't', 'y', 'yes', 'yeah', 'yup', 'certainly', 'uh-huh']
-    print(type(form_red))
 
     if not form_red:
-        print("HEY")
         rC = Post.query.count()
         val = random.randrange(rC)
         post = getRandomRow(Post, val)
         if post is None:
             post = Post(body = "")
-        #test = getRandomRow(Post, cookie_value)
-        #print(randomPost)
+
     else:
         postId = request.cookies.get('lastPost', type=int)
         post = Post.query.get(postId)
@@ -91,13 +76,20 @@ def index():
             post = getRandomRow(Post, val)
             if post is None:
                 post = Post(body = "")
-            #test = getRandomRow(Post, cookie_value)
-            #print(randomPost)
 
+    # Limit the ability to post a new Thought to the limit set in the Config
+    if not current_user.is_anonymous:
+        new_post_limit = current_app.config['NEW_POST_RATE']
+        can_post = current_user.last_post + new_post_limit < datetime.datetime.now()
+    else:
+        can_post = False
+    
+    print("USER: ", current_user)
+    print("CAN POST? ", can_post)
 
     resp.set_cookie(key='lastPost', value=str(post.id))
     resp.set_cookie(key='form_red', value=str(False))
-    resp.set_data(render_template('index.html', title='RandomThought.one', post=post, form=form))
+    resp.set_data(render_template('index.html', title='RandomThought.one', post=post, form=form, can_post=can_post))
     
     return resp
 

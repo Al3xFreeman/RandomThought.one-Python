@@ -1,11 +1,8 @@
-from email.policy import default
-from typing import overload
 from app import db, login
-from datetime import datetime
+from datetime import datetime, date
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import UserMixin, AnonymousUserMixin
 import random
-from sqlalchemy.orm import remote
 
 star = db.Table('starred',
     db.Column('user_id', db.Integer, db.ForeignKey('user.id'), primary_key=True),
@@ -21,8 +18,10 @@ class User(UserMixin, db.Model):
     starred_posts = db.relationship('Post', secondary=star, lazy='dynamic', backref=db.backref('users_starred', lazy=True))
     stars = db.Column(db.Integer, default=0)
 
+    last_post = db.Column(db.DateTime, default = date.min)
+
     def __repr__(self):
-        return '<User {}>'.format(self.username)
+        return '<User {}, last Post: {}>'.format(self.username, self.last_post)
 
     def set_password(self, password):
         self.password_hash = generate_password_hash(password)

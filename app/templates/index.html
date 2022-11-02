@@ -38,20 +38,21 @@
             <input id="formStarInput"  type="submit" value="{{ formText }}">
         </form>
     {% endif %}
-    
-    {% if not current_user.is_anonymous %}
-    <form action="" method="post">
-        {{ form.hidden_tag() }}
-        <p>
-            {{ form.body.label }}<br>
-            {{ form.body(size=128) }}<br>
-            {% for error in form.body.errors %}
-            <span style="color: red;">[{{ error }}]</span>
-            {% endfor %}
-        </p>
-        <p>{{ form.submit() }}</p>
+    {% if can_post %}
+        {% if not current_user.is_anonymous %}
+        <form action="" method="post">
+            {{ form.hidden_tag() }}
+            <p>
+                {{ form.body.label }}<br>
+                {{ form.body(size=128) }}<br>
+                {% for error in form.body.errors %}
+                <span style="color: red;">[{{ error }}]</span>
+                {% endfor %}
+            </p>
+            <p>{{ form.submit() }}</p>
 
-    </form>
+        </form>
+        {% endif %}
     {% endif %}
 {% endblock %}
 
