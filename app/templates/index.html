@@ -53,6 +53,8 @@
 
         </form>
         {% endif %}
+    {% else %}
+        Time until you can post again: {{ next_post_time }}
     {% endif %}
 {% endblock %}
 

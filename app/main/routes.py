@@ -84,12 +84,13 @@ def index():
     else:
         can_post = False
     
-    print("USER: ", current_user)
-    print("CAN POST? ", can_post)
+    print(current_user.last_post)
+    print(datetime.datetime.now())
+    next_post_time = current_app.config['NEW_POST_RATE'] - (datetime.datetime.now() - current_user.last_post)
 
     resp.set_cookie(key='lastPost', value=str(post.id))
     resp.set_cookie(key='form_red', value=str(False))
-    resp.set_data(render_template('index.html', title='RandomThought.one', post=post, form=form, can_post=can_post))
+    resp.set_data(render_template('index.html', title='RandomThought.one', post=post, form=form, can_post=can_post, next_post_time=next_post_time))
     
     return resp
 
