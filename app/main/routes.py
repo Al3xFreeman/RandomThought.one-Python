@@ -81,12 +81,15 @@ def index():
     if not current_user.is_anonymous:
         new_post_limit = current_app.config['NEW_POST_RATE']
         can_post = current_user.last_post + new_post_limit < datetime.datetime.now()
+        print(current_user.last_post)
+        print(datetime.datetime.now())
+        next_post_time = current_app.config['NEW_POST_RATE'] - (datetime.datetime.now() - current_user.last_post)
     else:
         can_post = False
+        next_post_time = 0
     
-    print(current_user.last_post)
-    print(datetime.datetime.now())
-    next_post_time = current_app.config['NEW_POST_RATE'] - (datetime.datetime.now() - current_user.last_post)
+    
+    
 
     resp.set_cookie(key='lastPost', value=str(post.id))
     resp.set_cookie(key='form_red', value=str(False))

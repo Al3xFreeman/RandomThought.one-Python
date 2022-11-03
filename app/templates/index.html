@@ -1,61 +1,82 @@
 {% extends "base.html" %}
+{% import 'bootstrap/wtf.html' as wtf %}
 
-{% block content %}
-    <h1>ONE RANDOM THOUGHT</h1>
-    {% if not current_user.is_anonymous %}
-    <!--<h1>Hi, {{ current_user.username }}!</h1>-->
-    {% endif %}
-    {% if not post.author %}
-    <h2>Anonymous said:</h2>
-    {% else %}
-    <h2><a href="{{ url_for('main.profile', username=post.author.username) }}"> {{ post.author.username }}</a> said:
-    </h2>
-    {% endif %}
-
-    <p>{{ post.body }}</p>
-    <p>Post ID: {{ post.id }}</p>
-    <p>Stars: <span id="starsCounter"> {{ post.stars() }}</span></p>
-    <!--
-    {% if post.author %}
-        ~ <a href="{{ url_for('main.profile', username=post.author.username) }}">{{ post.author.username }}</a>
-    
-    {% else %}
-        ~ Anonymous
-    {% endif %}
-    -->
-
-    {% if current_user.is_authenticated %}
-        {% if post in current_user.starred_posts %}
-            {% set starred = true %}
-            {% set formText = 'Remove Star!' %}
-        {% else %}
-            {% set starred = true %}
-            {% set formText = 'Add Star!' %}
-        {% endif %}
-        
-        <iframe name="dummyframe"  id="dummyframe" style="display: none;"></iframe>
-        <form id="formStar" action="javascript:void(0);" target="dummyframe">
-            <input id="formStarInput"  type="submit" value="{{ formText }}">
-        </form>
-    {% endif %}
-    {% if can_post %}
+{% block app_content %}
+    <div class="grid-container">
+        <div class="grid-child">
+        <div>
+            <a class="hideHref" href="{{ url_for('main.index') }}"><h1 id="title">ONE RANDOM THOUGHT</h1></a>
+        </div>            
+        </div>
+        <div class="login grid-child">
+            {% if current_user.is_anonymous %}
+            <a href="{{ url_for('auth.login') }}">Login</a></li>
+            {% else %}
+            <p>Total stars recieved: {{ current_user.stars }}</p>
+            <p>Total starred posts: <span id="totalStarred">{{ current_user.starred_posts.count() }}</span></p>
+            <a href="{{ url_for('main.profile', username=current_user.username) }}">Profile</a></li>
+            <a href="{{ url_for('auth.logout') }}">Logout</a></li>
+            {% endif %}
+        </div>
+    </div>
+    <div class = "postBody">
         {% if not current_user.is_anonymous %}
-        <form action="" method="post">
-            {{ form.hidden_tag() }}
-            <p>
-                {{ form.body.label }}<br>
-                {{ form.body(size=128) }}<br>
-                {% for error in form.body.errors %}
-                <span style="color: red;">[{{ error }}]</span>
-                {% endfor %}
-            </p>
-            <p>{{ form.submit() }}</p>
-
-        </form>
+        <!--<h1>Hi, {{ current_user.username }}!</h1>-->
         {% endif %}
-    {% else %}
-        Time until you can post again: {{ next_post_time }}
-    {% endif %}
+        <div class="center">
+            {% if not post.author %}
+            <h2>Anonymous once thought:</h2>
+            {% else %}
+            <h2><a href="{{ url_for('main.profile', username=post.author.username) }}"> {{ post.author.username }}</a> once thought:
+            </h2>
+        </div>
+        {% endif %}
+        <div  class="center">
+        <p>{{ post.body }}</p>
+        <p>Stars: <span id="starsCounter"> {{ post.stars() }}</span></p>
+        <!--
+        {% if post.author %}
+            ~ <a href="{{ url_for('main.profile', username=post.author.username) }}">{{ post.author.username }}</a>
+        
+        {% else %}
+            ~ Anonymous
+        {% endif %}
+        -->
+
+        {% if current_user.is_authenticated %}
+            {% if post in current_user.starred_posts %}
+                {% set starred = true %}
+                {% set formText = 'Remove Star!' %}
+            {% else %}
+                {% set starred = true %}
+                {% set formText = 'Add Star!' %}
+            {% endif %}
+            
+            <iframe name="dummyframe"  id="dummyframe" style="display: none;"></iframe>
+            <form id="formStar" action="javascript:void(0);" target="dummyframe">
+                <input id="formStarInput"  type="submit" value="{{ formText }}">
+            </form>
+        {% endif %}
+        {% if can_post %}
+            {% if not current_user.is_anonymous %}
+            <form action="" method="post">
+                {{ form.hidden_tag() }}
+                <p>
+                    {{ form.body.label }}<br>
+                    {{ form.body(size=128) }}<br>
+                    {% for error in form.body.errors %}
+                    <span style="color: red;">[{{ error }}]</span>
+                    {% endfor %}
+                </p>
+                <p>{{ form.submit() }}</p>
+
+            </form>
+            {% endif %}
+        {% else %}
+            Time until you can post again: {{ next_post_time }}
+        {% endif %}
+        </div>
+    </div>
 {% endblock %}
 
 
@@ -63,6 +84,9 @@
 {% block scripts %}
 {{ super() }}
 <script>
+    var colors = ['#235357', '#5e213d', '#5e633e', '#c4d461', '#6a8dde'];
+    var random_color = colors[Math.floor(Math.random() * colors.length)];
+    document.getElementById('title').style.color = random_color;
 
     {% if post in current_user.starred_posts %}
     let starred = true;
@@ -88,6 +112,7 @@
         $.get('/post/'+postId+'/star')
         .done(function(response) {
             $('#starsCounter').text(response['stars']);
+            $('#totalStarred').text(parseInt($('#totalStarred').text()) + 1)
             $('#formStarInput').val("Remove Star!");
         })
         .fail(function() {
@@ -98,6 +123,7 @@
         $.get('/post/'+postId+'/unstar')
         .done(function(response) {
             $('#starsCounter').text(response['stars']);
+            $('#totalStarred').text(parseInt($('#totalStarred').text()) - 1)
             $('#formStarInput').val("Add Star!");
         })
         .fail(function() {

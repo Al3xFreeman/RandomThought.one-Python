@@ -1,9 +1,22 @@
 {% extends "base.html" %}
 
-{% block content %}
-
-    <h1>ONE RANDOM</h1>
-    <h1>{{ user.username }}</h1>
+{% block app_content %}
+    <div class="grid-container">
+        <div class="title grid-child">
+            <h1>ONE RANDOM {{ user.username }}</h1>
+        </div>
+        <div class="login grid-child">
+            {% if current_user.is_anonymous %}
+            <a href="{{ url_for('auth.login') }}">Login</a></li>
+            {% else %}
+            <p>Total stars recieved: {{ current_user.stars }}</p>
+            <p>Total starred posts: <span id="totalStarred">{{ current_user.starred_posts.count() }}</span></p>
+            <a href="{{ url_for('main.profile', username=current_user.username) }}">Profile</a></li>
+            <a href="{{ url_for('auth.logout') }}">Logout</a></li>
+            {% endif %}
+        </div>
+    </div>
+    
     <h3>Posts:</h3>
     {% for post in user_posts %}
     <li>

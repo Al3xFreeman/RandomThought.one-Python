@@ -1,0 +1,46 @@
+body {
+    background-color: #cee6fc;
+    color: #213336;
+}
+
+h1 {
+    margin-top: 50px;
+    margin-left: 100px;
+    text-align: left;
+    font-size: 6vw
+    
+}
+.login {
+    text-align: center;
+    margin: auto;
+}
+
+.grid-container {
+    margin: auto;
+    display: grid;
+    grid-template-columns: 50% 50%;
+    
+}
+
+.postBody {
+    padding-top: 5vw;
+    margin: auto;
+    width: 80%;
+}
+
+.center {
+    text-align: center;
+}
+
+a[class*=hideHref]:visited{
+    text-decoration: none;
+}
+
+a[class*=hideHref]:active {
+    text-decoration: none;
+}
+
+a[class*=hideHref]:hover {
+    color: bisque;
+    text-decoration: none;
+}
