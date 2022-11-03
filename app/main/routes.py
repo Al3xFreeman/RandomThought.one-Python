@@ -57,7 +57,7 @@ def index():
     resp = make_response()
 
     # If page load came from redirect, will keep the last seen post, else, a new one is fetched
-    form_red = request.cookies.get('form_red')
+    form_red = request.cookies.get('form_red', 'False')
     form_red = form_red.lower() in ['true', '1', 't', 'y', 'yes', 'yeah', 'yup', 'certainly', 'uh-huh']
 
     if not form_red:
