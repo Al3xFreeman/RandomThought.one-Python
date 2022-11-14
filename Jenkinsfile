@@ -7,9 +7,9 @@ pipeline {
                 checkout scm
             }
         }
-        stage('TEST') {
+        stage('Build Image') {
             steps {
-                echo 'test test. 123 123'
+                sh 'sudo docker build -t test-randomthought:v1 .'
             }
         }
     }
