@@ -23,7 +23,7 @@ services:
         image: mysql/mysql-server
         restart: always
         environment:
-            MYSQL_RANDOM_ROOT_PASSWORD: yes
+            MYSQL_RANDOM_ROOT_PASSWORD: true
             MYSQL_DATABASE: randomthought
             MYSQL_USER: randomthought
             MYSQL_PASSWORD: root
