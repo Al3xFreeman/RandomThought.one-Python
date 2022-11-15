@@ -6,3 +6,6 @@ deploy.txt
 guide.txt
 TODO.txt
 app.db
+
+Dockerfile
+docker-compose.yml
