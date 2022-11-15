@@ -9,12 +9,15 @@ pipeline {
                 checkout scm
             }
         }
-        stage('Build Image') {
-            steps {
-                sh 'docker buildx create --use'
-                parallel {
-                    amd64: { sh 'docker buildx build --platform linux/amd64 -t al3xfreeman/randomthought:latest .' },
-                    arm64/v8: {sh 'docker buildx build --platform linux/arm/v8 -t al3xfreeman/randomthought:latest .' }
+        stage('Parallel building') {
+            parallel {
+                stage('AMD64 Build') {
+                    sh 'docker buildx create --use'
+                    sh 'docker buildx build --platform linux/amd64 -t al3xfreeman/randomthought:latest .'
+                }
+                stage('ARM64/V8 Build') {
+                    sh 'docker buildx create --use'
+                    sh 'docker buildx build --platform linux/arm/v8 -t al3xfreeman/randomthought:latest .'
                 }
             }
         }
