@@ -24,3 +24,5 @@ htmlcov/
 
 
 *.db
+app.db
+flask_monitoringdashboard.db
