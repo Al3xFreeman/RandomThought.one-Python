@@ -1,6 +1,5 @@
 .DS_Store
 .env
-config.cfg
 *.pyc
 *.pyo
 env/
