@@ -14,7 +14,7 @@ pipeline {
         }
         stage('Run Image') {
             steps {
-                sh 'docker run --rm test-randomthought:v1'
+                sh 'docker compose -d up'
             }
         }
     }
