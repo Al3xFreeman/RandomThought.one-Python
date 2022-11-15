@@ -1,7 +1,6 @@
 .env
 .gitignore
 .vscode
-config.cfg
 deploy.txt
 guide.txt
 TODO.txt
