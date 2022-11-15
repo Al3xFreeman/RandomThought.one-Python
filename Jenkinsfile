@@ -9,7 +9,7 @@ pipeline {
         }
         stage('Build Image') {
             steps {
-                sh 'docker build -t test-randomthought:v1 .'
+                sh 'docker build -t test-randomthought:latest .'
             }
         }
         stage('Run Image') {
