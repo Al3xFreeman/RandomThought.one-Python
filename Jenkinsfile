@@ -12,12 +12,16 @@ pipeline {
         stage('Parallel building') {
             parallel {
                 stage('AMD64 Build') {
-                    sh 'docker buildx create --use'
-                    sh 'docker buildx build --platform linux/amd64 -t al3xfreeman/randomthought:latest .'
+                    steps {
+                        sh 'docker buildx create --use'
+                        sh 'docker buildx build --platform linux/amd64 -t al3xfreeman/randomthought:latest .'
+                    }
                 }
                 stage('ARM64/V8 Build') {
-                    sh 'docker buildx create --use'
-                    sh 'docker buildx build --platform linux/arm/v8 -t al3xfreeman/randomthought:latest .'
+                    steps {
+                        sh 'docker buildx create --use'
+                        sh 'docker buildx build --platform linux/arm/v8 -t al3xfreeman/randomthought:latest .'
+                    }
                 }
             }
         }
