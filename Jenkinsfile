@@ -1,6 +1,8 @@
 pipeline {
     agent any
-
+    environment {
+        dockerhub=credentials('DockerHub')
+    }
     stages {
         stage('Clone Repository') {
             steps {
@@ -9,14 +11,17 @@ pipeline {
         }
         stage('Build Image') {
             steps {
-                sh 'docker build -t test-randomthought:latest .'
+                sh 'docker build -t randomthought:latest .'
             }
         }
-        stage('Run Image') {
+        stage('Publish to DockerHub') {
             steps {
-                sh 'docker-compose down'
-                sh 'docker-compose up -d'
+                sh 'docker -t randomthought:latest al3xfreeman/randomthought:latest'
+                sh 'echo $dockerhub_PSW | docker login -u $dockerhub_USR --password-stdin'
+
+                sh 'docker push randomthought:latest .'
             }
         }
+        
     }
 }
