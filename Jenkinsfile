@@ -9,14 +9,19 @@ pipeline {
                 checkout scm
             }
         }
-        stage('Build Image') {
+        parallel {
+        stage('Build AMD64 Image') {
             steps {
                 sh 'docker buildx create --use'
-                parallel {
-                    sh 'docker buildx build --platform linux/amd64 -t al3xfreeman/randomthought:latest .'
-                    sh 'docker buildx build --platform linux/arm/v8 -t al3xfreeman/randomthought:latest .'
-                }
+                sh 'docker buildx build --platform linux/amd64 -t al3xfreeman/randomthought:latest .'
             }
+        }
+        stage('Build ARM64/V8 Image') {
+            steps {
+                sh 'docker buildx create --use'
+                sh 'docker buildx build --platform linux/arm/v8 -t al3xfreeman/randomthought:latest .'
+            }
+        }
         }
         stage('Publish to DockerHub') {
             steps {
