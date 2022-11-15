@@ -1,0 +1,42 @@
+version: '3'
+
+services:
+    flask-app:
+        container_name: randomthought
+        build: .
+        restart: always
+        environment:
+            SECRET_KEY: test 
+            DATABASE_URL: mysql+pymysql://randomthought:root@dbserver/randomthought
+        depends_on: [mysql-db]
+        ports:
+            - '8000:5000'
+        volumes:
+            - ./app:/home/randomThought/app
+        networks:
+            - backend
+        entrypoint:
+            - ./boot.sh
+
+    mysql-db:
+        container_name: dbserver
+        image: mysql/mysql-server
+        restart: always
+        environment:
+            MYSQL_RANDOM_ROOT_PASSWORD: yes
+            MYSQL_DATABASE: randomthought
+            MYSQL_USER: randomthought
+            MYSQL_PASSWORD: root
+        ports:
+            - '3308:3306'
+        volumes:
+            - database:/var/lib/mysql
+        networks:
+            - backend
+
+networks:
+    backend:
+
+volumes:
+    app:
+    database:
