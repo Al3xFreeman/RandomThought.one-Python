@@ -3,7 +3,7 @@ version: '3'
 services:
     flask-app:
         container_name: randomthought
-        image: test-randomthought
+        image: al3xfreeman/randomthought:latest
         restart: always
         environment:
             SECRET_KEY: test 
