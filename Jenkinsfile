@@ -19,7 +19,7 @@ pipeline {
                 sh 'docker tag randomthought:latest al3xfreeman/randomthought:latest'
                 sh 'echo $dockerhub_PSW | docker login -u $dockerhub_USR --password-stdin'
 
-                sh 'docker push randomthought:latest .'
+                sh 'docker push randomthought:latest'
             }
         }
         
