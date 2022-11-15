@@ -8,17 +8,15 @@ services:
         environment:
             SECRET_KEY: test 
             DATABASE_URL: mysql+pymysql://randomthought:root@dbserver/randomthought
-        depends_on: [mysql-db]
+        depends_on: [dbserver]
         ports:
             - '8000:5000'
-        volumes:
-            - ./app:/home/randomThought/app
         networks:
             - backend
         entrypoint:
             - ./boot.sh
 
-    mysql-db:
+    dbserver:
         container_name: dbserver
         image: mysql/mysql-server
         restart: always
