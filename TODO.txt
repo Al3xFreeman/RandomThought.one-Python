@@ -28,3 +28,16 @@
 - Poetry/Package manager
 
 - Caching
+
+- CI/CD | Jenkins | Tener Jenkins corriendo en un "build server", aislado del servidor (la raspi) donde esté ejecutándose la aplicación.
+
+- ✔️ docker-compose 
+
+- multi-stage builds
+
+- Analytics - https://charlesleifer.com/blog/saturday-morning-hacks-building-an-analytics-app-with-flask/
+
+- Project Management workflow - https://blog.miguelgrinberg.com/post/simple-project-management-or-how-to-finish-your-project-before-the-world-comes-to-an-end
+  de cara al próximo proyectillo
+
+- Kubernetes

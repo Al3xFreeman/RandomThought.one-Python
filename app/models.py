@@ -3,6 +3,10 @@ from datetime import datetime, date
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import UserMixin, AnonymousUserMixin
 import random
+from sqlalchemy.ext.hybrid import hybrid_property
+from sqlalchemy import func
+import sqlalchemy
+
 
 star = db.Table('starred',
     db.Column('user_id', db.Integer, db.ForeignKey('user.id'), primary_key=True),
@@ -65,9 +69,23 @@ class Post(db.Model):
     body = db.Column(db.String(140))
     timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    view_count = db.Column(db.Integer, default=0)
 
     def __repr__(self):
         return '<ID: {} | Post {} by: {} | Stars: {}>'.format(self.id, self.body, self.author, len(self.users_starred))
 
     def stars(self):
         return len(self.users_starred)
+
+    def addView(self, amount = 1):
+        print("huh?", self.view_count)
+        self.view_count += amount
+        print("huh?", self.view_count)
+        return self.view_count
+
+    @hybrid_property
+    def popularity(self, decimals = 2):
+        if self.view_count == 0:
+            return 0
+        else:
+            return round(len(self.users_starred) / self.view_count, decimals)

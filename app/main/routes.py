@@ -11,7 +11,7 @@ import datetime
 @bp.route("/testPost")
 def testPost():
     #print("Number of posts: ", Post.query.count())
-    p = Post(body="Test Post")
+    p = Post(body="Test Post")   
     db.session.add(p)
     db.session.commit()
     #print("Number of posts: ", Post.query.count())
@@ -81,16 +81,17 @@ def index():
     if not current_user.is_anonymous:
         new_post_limit = current_app.config['NEW_POST_RATE']
         can_post = current_user.last_post + new_post_limit < datetime.datetime.now()
-        print(current_user.last_post)
-        print(datetime.datetime.now())
         next_post_time = current_app.config['NEW_POST_RATE'] - (datetime.datetime.now() - current_user.last_post)
     else:
         can_post = False
         next_post_time = 0
     
-    
-    
-
+    print("VIEWCOUNT: ", post.view_count)
+    #if post.view_count:
+    post.addView(1)
+    db.session.add(post)
+    db.session.commit()
+    print("VIEWCOUNT: ", post.view_count)
     resp.set_cookie(key='lastPost', value=str(post.id))
     resp.set_cookie(key='form_red', value=str(False))
     resp.set_data(render_template('index.html', title='RandomThought.one', post=post, form=form, can_post=can_post, next_post_time=next_post_time))

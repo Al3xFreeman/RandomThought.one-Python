@@ -33,7 +33,12 @@
         {% endif %}
         <div  class="center">
         <p>{{ post.body }}</p>
-        <p>Stars: <span id="starsCounter"> {{ post.stars() }}</span></p>
+        <p>Stars: <span id="starsCounter"> {{ post.stars() }}</span> 
+        {% if post.view_count %}
+        
+        | Views: {{ post.view_count }} | Popularity: {{ post.popularity }} 
+        {% endif %}
+        </p>
         <!--
         {% if post.author %}
             ~ <a href="{{ url_for('main.profile', username=post.author.username) }}">{{ post.author.username }}</a>

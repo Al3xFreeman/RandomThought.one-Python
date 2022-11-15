@@ -15,7 +15,7 @@ RUN venv/bin/pip install gunicorn pymysql cryptography==3.4
 
 COPY app app
 COPY migrations migrations
-COPY randomThought.py config.py boot.sh config.cfg locustfile.py ./
+COPY randomThought.py config.py boot.sh ./
 RUN chmod +x boot.sh
 
 ENV FLASK_APP randomThought.py
