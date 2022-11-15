@@ -9,4 +9,4 @@ while true; do
     sleep 5
 done
 
-exec gunicorn -b :5000 --access-logfile - --error-logfile -
+exec gunicorn -b :5000 --access-logfile - --error-logfile - randomThought:app
