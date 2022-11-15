@@ -11,7 +11,7 @@ pipeline {
         }
         stage('Build Image') {
             steps {
-                sh 'docker build -t randomthought:latest .'
+                sh 'docker buildx build --platform linux/amd64,linux/arm64,linux/arm/v7,linux/arm/v8 -t al3xfreeman/randomthought'
             }
         }
         stage('Publish to DockerHub') {
