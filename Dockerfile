@@ -8,7 +8,8 @@ ENV CRYPTOGRAPHY_DONT_BUILD_RUST=1
 
 COPY requirements.txt requirements.txt
 RUN python -m venv venv
-RUN venv/bin/pip install --upgrade pip setuptools
+RUN apt-get install cmake
+RUN venv/bin/pip install --upgrade pip setuptools wheel
 RUN venv/bin/pip install -r requirements.txt
 #Cryptography <3.5 is needed in order to not depend on having Rust
 RUN venv/bin/pip install gunicorn pymysql cryptography==3.4
