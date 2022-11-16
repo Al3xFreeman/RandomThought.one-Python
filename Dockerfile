@@ -9,7 +9,7 @@ ENV CRYPTOGRAPHY_DONT_BUILD_RUST=1
 COPY requirements.txt requirements.txt
 RUN python -m venv venv
 RUN apt update
-RUN apt install cmake
+RUN apt install cmake -y
 RUN venv/bin/pip install --upgrade pip setuptools wheel
 RUN venv/bin/pip install -r requirements.txt
 #Cryptography <3.5 is needed in order to not depend on having Rust
