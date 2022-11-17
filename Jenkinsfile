@@ -31,7 +31,7 @@ pipeline {
                 sh "ssh $remote \"cd $loc ; echo $dockerhub_PSW | docker login -u $dockerhub_USR --password-stdin \""
 
                 sh "ssh $remote \"cd $loc ; docker push al3xfreeman/randomthought:\\\"${env.BUILD_ID}\\\" \""
-                sh "ssh $remote \"cd $loc ; docker push al3xfreeman/randomthought:latest" \""
+                sh "ssh $remote \"cd $loc ; docker push al3xfreeman/randomthought:latest\""
             }
         }
         stage('Deploy') {
