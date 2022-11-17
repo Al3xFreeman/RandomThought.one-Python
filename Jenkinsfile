@@ -11,12 +11,14 @@ pipeline {
         stage('Checkout') {
             steps {
                 checkout scm
+                sh 'EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE'
+                sh 'echo ${env.BUILD_ID}'
+
             }
         }
         stage('Clone Repository in remote server') {
             steps {
                 sh 'ssh $remote "cd $loc ; git pull $git_repo"'
-                sh 'echo ${env.BUILD_ID}'
             }
         }
         stage('Build Image') {
