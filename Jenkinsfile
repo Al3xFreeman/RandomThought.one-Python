@@ -27,8 +27,8 @@ pipeline {
         }
         stage('Deploy') {
             steps {
-                sh 'direct_ssh docker-compose pull'
-                sh 'direct_ssh docker-compose up -d'
+                sh '$direct_ssh docker-compose pull'
+                sh '$direct_ssh docker-compose up -d'
             }
         }
         
