@@ -8,6 +8,11 @@ pipeline {
         direct_ssh='ssh alex@192.168.1.67 "cd Documents/randomThought/app_data/RandomThought.one-Python ; '
     }
     stages {
+        stage('Checkout') {
+            steps {
+                checkout scm
+            }
+        }
         stage('Clone Repository in remote server') {
             steps {
                 sh 'ssh $remote "cd $loc ; git pull $git_repo"'
@@ -15,14 +20,14 @@ pipeline {
         }
         stage('Build Image') {
             steps {
-                sh 'ssh $remote "cd $loc ; docker build -t al3xfreeman/randomthought:latest ."'
+                sh 'ssh $remote "cd $loc ; docker build -t al3xfreeman/randomthought:${env.BUILD_ID} ."'
             }
         }
         stage('Publish to DockerHub') {
             steps {
                 sh 'ssh $remote "cd $loc ; echo $dockerhub_PSW | docker login -u $dockerhub_USR --password-stdin "'
 
-                sh 'ssh $remote "cd $loc ; docker push al3xfreeman/randomthought:latest "'
+                sh 'ssh $remote "cd $loc ; docker push al3xfreeman/randomthought:${env.BUILD_ID} "'
             }
         }
         stage('Deploy') {
