@@ -20,9 +20,9 @@ pipeline {
         }
         stage('Publish to DockerHub') {
             steps {
-                sh 'direct_ssh echo $dockerhub_PSW | docker login -u $dockerhub_USR --password-stdin'
+                sh '$direct_ssh echo $dockerhub_PSW | docker login -u $dockerhub_USR --password-stdin'
 
-                sh 'direct_ssh docker push al3xfreeman/randomthought:latest'
+                sh '$direct_ssh docker push al3xfreeman/randomthought:latest'
             }
         }
         stage('Deploy') {
