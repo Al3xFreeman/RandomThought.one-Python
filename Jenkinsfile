@@ -7,6 +7,9 @@ pipeline {
         loc='Documents/randomThought/app_data/RandomThought.one-Python'
         direct_ssh='ssh alex@192.168.1.67 "cd Documents/randomThought/app_data/RandomThought.one-Python ; '
     }
+    triggers {
+        githubPush()
+    }
     stages {
         stage('Checkout') {
             steps {
