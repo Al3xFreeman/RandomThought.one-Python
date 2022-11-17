@@ -11,8 +11,7 @@ pipeline {
         }
         stage('Build Image') {
             steps {
-                sh 'docker buildx create --use'
-                sh 'docker buildx build --platform linux/arm/v8 -t al3xfreeman/randomthought:latest .'
+                sh 'docker build .'
             }
         }
         stage('Publish to DockerHub') {
