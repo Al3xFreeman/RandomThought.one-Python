@@ -16,7 +16,7 @@ pipeline {
         stage('Clone Repository in remote server') {
             steps {
                 sh 'ssh $remote "cd $loc ; git pull $git_repo"'
-                sh '${env.BUILD_ID}'
+                sh 'echo ${env.BUILD_ID}'
             }
         }
         stage('Build Image') {
