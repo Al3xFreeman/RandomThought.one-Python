@@ -10,7 +10,7 @@ pipeline {
     stages {
         stage('Clone Repository in remote server') {
             steps {
-                sh 'ssh $remote "cd $loc ; git $git_repo pull"'
+                sh 'ssh $remote "cd $loc ; git pull $git_repo"'
             }
         }
         stage('Build Image') {
