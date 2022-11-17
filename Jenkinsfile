@@ -22,6 +22,11 @@ pipeline {
                 sh 'docker push al3xfreeman/randomthought:latest'
             }
         }
+        stage('Deploy') {
+            steps {
+                sh 'docker-compose up -d'
+            }
+        }
         
     }
 }
