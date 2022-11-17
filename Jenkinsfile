@@ -5,7 +5,7 @@ pipeline {
         remote='alex@192.168.1.67'
         git_repo=credentials('randomthought_repo')
         loc='Documents/randomThought/app_data/RandomThought.one-Python'
-        direct_ssh='ssh alex@192.168.1.67 "cd /Documents/randomThought/app_data/RandomThought.one-Python" ; '
+        direct_ssh='ssh alex@192.168.1.67 "cd Documents/randomThought/app_data/RandomThought.one-Python" ; '
     }
     stages {
         stage('Clone Repository in remote server') {
