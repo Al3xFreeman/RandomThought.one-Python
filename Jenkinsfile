@@ -12,7 +12,7 @@ pipeline {
             steps {
                 checkout scm
                 sh 'echo EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE'
-                echo ${env.BUILD_ID}
+                echo "${env.BUILD_ID}"
 
             }
         }
