@@ -1,5 +1,7 @@
 In dev environment:
+docker buildx create --use
 docker buildx build --platform linux/amd64,linux/arm64,linux/arm/v7,linux/arm/v8 -t al3xfreeman/randomthought --push .
+docker buildx build --platform linux/amd64,linux/arm64 -t al3xfreeman/randomthought:0.0.1 --push .
 
 In Raspberry Pi:
 
@@ -10,3 +12,5 @@ docker run --name randomthought -d -p 8000:5000 -e SECRET_KEY=my-secret --link m
 
 docker start mysql
 docker start randomthought
+
+cloudflared tunnel --url http://localhost:8000

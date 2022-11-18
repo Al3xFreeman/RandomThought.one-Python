@@ -13,6 +13,7 @@ class Config(object):
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     POSTS_PER_PAGE = 10
     NEW_POST_RATE = timedelta(days = 1)
+    TEMPLATES_AUTO_RELOAD = False
 
 
 class TestConfig(Config):

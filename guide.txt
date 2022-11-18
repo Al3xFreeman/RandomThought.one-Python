@@ -50,10 +50,27 @@
 
 
 
-
+docker buildx create --use
 docker buildx build --platform linux/amd64,linux/arm64,linux/arm/v7,linux/arm/v8 -t al3xfreeman/randomthought --push .
 
 docker run --name mysql -d -e MYSQL_RANDOM_ROOT_PASSWORD=yes -e MYSQL_DATABASE=randomthought -e MYSQL_USER=randomthought -e MYSQL_PASSWORD=root mysql/mysql-server:latest
 
 docker run --name randomthought -d -p 8000:5000 -e SECRET_KEY=test --link mysql:dbserver -e DATABASE_URL=mysql+pymysql://randomthought:root@dbserver/randomthought --platform linux/arm64/v8 al3xfreeman/randomthought:latest
 
+docker compose up -d
+
+
+jenkins local
+https://blog.nestybox.com/2019/09/29/jenkins.html
+docker run --rm -d --group-add $(stat -c '%g' /var/run/docker.sock) -v /var/run/docker.sock:/var/run/docker.sock -P jenkins-docker
+
+
+
+
+Generate SSH keys
+https://unix.stackexchange.com/questions/26371/ssh-prompts-for-password-despite-ssh-authorized-keys/270935
+
+docker-compose -> pull and update containers
+https://tcude.net/updating-container-with-docker-compose/
+
+https://worklifenotes.com/2020/06/04/7-best-practices-modern-cicd/
